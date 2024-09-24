@@ -37,29 +37,12 @@ func New() Service {
 	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", username, password, host, port, database)
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
-		log.Fatal(err)
-	}
-	dbInstance = &service{
+        log.Fatal(err)
+    }
+    dbInstance = &service{
 		db: db,
 	}
 	return dbInstance
-}
-
-func Create() error {
-    connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/", username, password, host, port)
-	db, err := sql.Open("pgx", connStr)
-	if err != nil {
-        return err
-	}
-    defer db.Close();
-    
-    q := fmt.Sprintf("CREATE DATABASE %s", database)
-    _, err = db.Exec(q)
-    if err != nil {
-        return err
-    }
-
-    return nil
 }
 
 func (s *service) Health() map[string]string {
