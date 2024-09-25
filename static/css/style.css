@@ -16,3 +16,10 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+
+
+.set {
+    display: flex;
+    flex-direction: column;
+}

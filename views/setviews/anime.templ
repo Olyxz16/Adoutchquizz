@@ -1,0 +1,33 @@
+package setviews
+
+import (
+    "Adoutchquizz/views"
+)
+
+templ Anime() {
+    @views.Base() {
+        <div> 
+            <h2> Ajoute un nouvel anime </h2>
+            <form class="set" hx-post="/set/anime" hx-target="#result" hx-swap="innerHTML">
+                <label> Title </label>
+                <input type="text" name="title" />
+                <label> Year </label>
+                <input type="number" name="year" />
+                <label> Type </label>
+                <input type="text" name="type" />
+                <label> Description </label>
+                <input type="text" name="description" />
+                <input type="submit" />
+            </form>
+            <h2 id="result"> </h2>
+        </div>
+    }
+}
+
+templ AnimeResult(ok bool) {
+    if ok {
+        <p> Success </p>
+    } else {
+        <p> Fail </p>
+    }
+}

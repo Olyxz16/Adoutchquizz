@@ -1,0 +1,38 @@
+package setviews
+
+import (
+    "Adoutchquizz/views"
+)
+
+templ Video() {
+    @views.Base() {
+        <div> 
+            <h2> Ajoute une nouvelle vidéo </h2>
+            <form class="set" hx-post="/set/video" hx-target="#result" hx-swap="innerHTML">
+                <!-- Search bar -->
+                <label> Nom anime </label>
+                <input type="text" name="title" />
+                <label> Type (Opening, Ending, OST) </label>
+                <input type="text" name="type" />
+                <label> Numero Clip </label>
+                <input type="number" name="indClip" />
+                <label> Url </label>
+                <input type="text" name="url" />
+                <label> Numero vidéo </label>
+                <input type="text" name="indVideo" />
+                <label> Date de sortie </label>
+                <input type="date" name="date"/>
+                <input type="submit" />
+            </form>
+            <h2 id="result"> </h2>
+        </div>
+    }
+}
+
+templ VideoResult(ok bool) {
+    if ok {
+        <p> Success </p>
+    } else {
+        <p> Fail </p>
+    }
+}

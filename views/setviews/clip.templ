@@ -1,0 +1,44 @@
+package setviews
+
+import (
+    "Adoutchquizz/views"
+)
+
+templ Clip() {
+    @views.Base() {
+        <div> 
+            <h2> Ajoute un nouveau clip </h2>
+            <form class="set" hx-post="/set/clip" hx-target="#result" hx-swap="innerHTML">
+                <!-- Search bar -->
+                <label> Nom anime </label>
+                <input type="text" name="title" />
+                <label> Type (Opening, Ending, OST) </label>
+                <input type="text" name="type" />
+                <label> Numero </label>
+                <input type="number" name="ind" />
+                <label> Annee </label>
+                <input type="number" name="year" />
+                <label> Titre </label>
+                <input type="text" name="title" />
+                <label> Url </label>
+                <input type="text" name="url" />
+                <label> Path </label>
+                <input type="text" name="path" />
+                <label> Utilisable </label>
+                <input type="checkbox" name="usable" />
+                <label> Difficulté </label>
+                <input type="number" name="difficulty" />
+                <input type="submit" />
+            </form>
+            <h2 id="result"> </h2>
+        </div>
+    }
+}
+
+templ ClipResult(ok bool) {
+    if ok {
+        <p> Success </p>
+    } else {
+        <p> Fail </p>
+    }
+}
