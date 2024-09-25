@@ -1,34 +1,26 @@
 package database
 
-import (
-    "Adoutchquizz/database/entities/anime"
-    "Adoutchquizz/database/entities/clip"
-    "Adoutchquizz/database/entities/video"
-)
-
 func (s *service) Migrate() error {
-    db := dbInstance.db
-	if err := anime.Migrate(db); err != nil {
+	if err := s.migrateAnime(); err != nil {
 		return err
 	}
-	if err := clip.Migrate(db); err != nil {
+	if err := s.migrateClip(); err != nil {
 		return err
 	}
-	if err := video.Migrate(db); err != nil {
+	if err := s.migrateVideo(); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (s *service) Drop() error {
-    db := dbInstance.db
-	if err := anime.Drop(db); err != nil {
+	if err := s.dropAnime(); err != nil {
 		return err
 	}
-	if err := clip.Drop(db); err != nil {
+	if err := s.dropClip(); err != nil {
 		return err
 	}
-	if err := video.Drop(db); err != nil {
+	if err := s.dropVideo(); err != nil {
 		return err
 	}
 	return nil

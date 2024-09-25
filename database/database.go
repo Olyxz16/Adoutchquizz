@@ -14,6 +14,8 @@ import (
 
 type Service interface {
 	Health() map[string]string
+    Migrate() error
+    Drop() error
 }
 
 type service struct {

@@ -1,11 +1,11 @@
-package clip
+package database
 
 import (
     "strings"
-	"database/sql"
 )
 
 type Clip struct {
+    Uid             string
     AnimeRef        string
     Type            int
     Ind             int
@@ -17,7 +17,10 @@ type Clip struct {
     Difficulty      int
 }
 
-func Add(db *sql.DB, clip Clip) error {
+
+
+func AddClip(clip Clip) error {
+    db := dbInstance.db
     tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -33,8 +36,9 @@ func Add(db *sql.DB, clip Clip) error {
 	return nil
 }
 
-func Migrate(db *sql.DB) error {
+func (s *service) migrateClip() error {
     q := `CREATE TABLE IF NOT EXISTS Clip (
+        uid             SERIAL PRIMARY KEY,
         animeID         VARCHAR(255),
         type            VARCHAR(255),
         ind             VARCHAR(255),
@@ -44,15 +48,14 @@ func Migrate(db *sql.DB) error {
         path            VARCHAR(255),
         usable          BOOLEAN,
         difficulty      INT
-        PRIMARY KEY (animeID, type, ind)
     )`
-    _, err := db.Exec(q)
+    _, err := s.db.Exec(q)
     return err
 }
 
-func Drop(db *sql.DB) error {
+func (s *service) dropClip() error {
 	q := `DROP TABLE Clip`
-	_, err := db.Exec(q)
+	_, err := s.db.Exec(q)
 	if err != nil {
 		if strings.Contains(err.Error(), "SQLSTATE 42P01") {
 			return nil

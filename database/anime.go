@@ -1,18 +1,18 @@
-package anime
+package database
 
 import (
     "strings"
-	"database/sql"
 )
 type Anime struct {
-    Uid             string
+    Uid             int
     Title           string
     Year            int
     Type            string
     Description     string
 }
 
-func Add(db *sql.DB, anime Anime) error {
+func AddAnime(anime Anime) error {
+    db := dbInstance.db
     tx, err := db.Begin()
 	if err != nil {
 		return err
@@ -28,21 +28,21 @@ func Add(db *sql.DB, anime Anime) error {
 	return nil
 }
 
-func Migrate(db *sql.DB) error {
+func (s *service) migrateAnime() error {
     q := `CREATE TABLE IF NOT EXISTS Anime (
-        uid         VARCHAR(255) PRIMARY KEY,
+        uid         SERIAL PRIMARY KEY,
         title       VARCHAR(255),
         year        INT,
         type        VARCHAR(255),
         description VARCHAR(255)
     )`
-    _, err := db.Exec(q)
+    _, err := s.db.Exec(q)
     return err
 }
 
-func Drop(db *sql.DB) error {
+func (s *service) dropAnime() error {
 	q := `DROP TABLE Anime`
-	_, err := db.Exec(q)
+	_, err := s.db.Exec(q)
 	if err != nil {
 		if strings.Contains(err.Error(), "SQLSTATE 42P01") {
 			return nil
