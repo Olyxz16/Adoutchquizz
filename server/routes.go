@@ -14,6 +14,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.Static("/static", "static")
 
 	e.GET("/", handler.Index)
+    e.GET("/get/:group/:value/*", handler.Get)
+    e.GET("/set/:value", handler.Set)
 
 	return e
 }
