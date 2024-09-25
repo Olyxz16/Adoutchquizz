@@ -1,0 +1,18 @@
+body {
+    margin: 0px;
+    width: 100vw;
+    height: 100vh;
+}
+
+#main {
+    transform: translate(0, 20vh);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 48px;
+}
+
+#getter, #setter {
+    display: flex;
+    flex-direction: column;
+}

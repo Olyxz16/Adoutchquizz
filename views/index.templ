@@ -2,15 +2,19 @@ package views
 
 templ Index() {
     @Base() {
-        <div id="getter">
-            <h2> Getter </h2>
-            <a href="/get"> </a>
-        </div>
-        <div id="setter">
-            <h2> Setter </h2>
-            <a href="/set/anime"> Anime </a>
-            <a href="/set/clip"> Clip </a>
-            <a href="/set/video"> Video </a>
+        <div id="main">
+            <div id="getter">
+                <h2> Getter </h2>
+                <a href="/get/video/clips"> Tous les clips d'une video </a>
+                <a href="/get/anime/clips"> Tous les clips d'un anime </a>
+                <a href="/get/anime/usable"> Tous les clips utilisables d'un anime </a>
+            </div>
+            <div id="setter">
+                <h2> Setter </h2>
+                <a href="/set/anime"> Anime </a>
+                <a href="/set/clip"> Clip </a>
+                <a href="/set/video"> Video </a>
+            </div>
         </div>
     } 
 }
