@@ -1,12 +1,13 @@
 package database
 
 import (
+    "fmt"
     "strings"
 )
 
 type Clip struct {
-    Uid             string
-    AnimeRef        string
+    Uid             int
+    AnimeRef        int
     Type            int
     Ind             int
     Year            int
@@ -36,12 +37,39 @@ func AddClip(clip Clip) error {
 	return nil
 }
 
+func ClipIdFromData(title string, typ int, ind int) (int, error) {
+    db := dbInstance.db
+    q := `SELECT uid FROM clip
+            WHERE clip.type=$1
+            AND clip.ind=$2
+            AND clip.animeId IN (
+	            SELECT DISTINCT uid FROM Anime
+	            WHERE title=$3
+            )`
+    rows, err := db.Query(q, typ, ind, title)
+	if err != nil {
+		return 0, err
+	}
+	defer rows.Close()
+    
+    ok := rows.Next()
+    if !ok {
+        return 0, fmt.Errorf("Not enough result")
+    }
+    var uid int
+    err = rows.Scan(&uid)
+    if err != nil {
+        return 0, err
+    }
+    return uid, nil
+}
+
 func (s *service) migrateClip() error {
     q := `CREATE TABLE IF NOT EXISTS Clip (
         uid             SERIAL PRIMARY KEY,
-        animeID         VARCHAR(255),
-        type            VARCHAR(255),
-        ind             VARCHAR(255),
+        animeID         INT,
+        type            INT,
+        ind             INT,
         year            INT,
         title           VARCHAR(255),
         url             VARCHAR(255),

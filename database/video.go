@@ -1,13 +1,14 @@
 package database
 
 import (
+	"database/sql"
 	"strings"
 	"time"
 )
 
 type Video struct {
 	Url             string
-	ClipRef         string
+	ClipRef         int
 	Ind             int
     ReleaseDate     time.Time
 }
@@ -22,7 +23,8 @@ func AddVideo(video Video) error {
 	q := `INSERT INTO 
 	Video (url, clipID, ind, releaseDate)
 	VALUES ($1, $2, $3, $4);`
-    _, err = tx.Exec(q, video.Url, video.ClipRef, video.Ind, video.ReleaseDate)
+    time := sql.NullTime { Time: video.ReleaseDate, Valid: true }
+    _, err = tx.Exec(q, video.Url, video.ClipRef, video.Ind, time)
     if err != nil {
         return err
     }
@@ -34,7 +36,7 @@ func GetAllClipsFromVideo(url string) ([]Clip, error) {
     db := dbInstance.db
     result := []Clip{}
     q := `
-        SELECT * FROM
+        SELECT * FROM Video
         WHERE clipId IN 
             (SELECT clipID FROM Video
             WHERE url=$1)
@@ -46,7 +48,7 @@ func GetAllClipsFromVideo(url string) ([]Clip, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var animeRef string
+		var animeRef int 
 		var typ int
         var ind int
         var year int
@@ -75,7 +77,7 @@ func GetAllClipsFromVideo(url string) ([]Clip, error) {
 func (s *service) migrateVideo() error {
     q := `CREATE TABLE IF NOT EXISTS Video (
         url         VARCHAR(255),
-        clipID      VARCHAR(255),
+        clipID      INT,
         ind         INT,
         releaseDate DATE,
         PRIMARY KEY (url, clipID)
