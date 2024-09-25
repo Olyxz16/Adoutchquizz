@@ -35,6 +35,9 @@ install:
 	@go mod download
 	@npm i
 
+init-db:
+	@createdb -U postgres Adoutchquizz
+
 # Create DB container
 docker-run:
 	@if docker compose up 2>/dev/null; then \
