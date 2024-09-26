@@ -6,6 +6,7 @@ import (
 
 templ Video() {
     @views.Base() {
+        @views.MenuArrow()
         <div id="setview"> 
             <h2> Ajoute une nouvelle vidéo </h2>
             <form class="form" hx-post="/set/video" hx-target="#result" hx-swap="innerHTML">

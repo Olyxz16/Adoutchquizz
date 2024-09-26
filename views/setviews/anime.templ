@@ -6,6 +6,7 @@ import (
 
 templ Anime() {
     @views.Base() {
+        @views.MenuArrow()
         <div id="setview"> 
             <h2> Ajoute un nouvel anime </h2>
             <form class="form" hx-post="/set/anime" hx-target="#result" hx-swap="innerHTML">
