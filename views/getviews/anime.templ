@@ -1,0 +1,27 @@
+package getviews
+
+import (
+    "Adoutchquizz/views"
+    "Adoutchquizz/database"
+)
+
+templ AnimeTable(url string, clips []database.Clip) {
+    @views.Base() {
+        <div> 
+            <h2> Clips from video { url } </h2>
+            <table>
+                for _, clip := range clips {
+                    @video(clip) 
+                }
+            </table>
+        </div>
+    } 
+}
+
+templ AnimeTableError() {
+    @views.Base() {
+        <div>
+            <h2> Error </h2>
+        </div>
+    }
+}

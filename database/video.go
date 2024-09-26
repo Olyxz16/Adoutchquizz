@@ -48,6 +48,7 @@ func GetAllClipsFromVideo(url string) ([]Clip, error) {
 	defer rows.Close()
 
 	for rows.Next() {
+        var uid int
 		var animeRef int 
 		var typ int
         var ind int
@@ -57,7 +58,7 @@ func GetAllClipsFromVideo(url string) ([]Clip, error) {
         var path string
         var usable bool
         var difficulty int
-		err := rows.Scan(&animeRef, &typ, &ind, &year, &title, &url, &path, &usable, &difficulty)
+		err := rows.Scan(&uid, &animeRef, &typ, &ind, &year, &title, &url, &path, &usable, &difficulty)
 		if err != nil {
 			return nil, err
 		}

@@ -51,6 +51,90 @@ func GetAnimeIDFromTitle(title string) (int, error) {
     return uid, nil
 }
 
+func GetAllClipsFromAnime(title string) ([]Clip, error) {
+    db := dbInstance.db
+    result := []Clip{}
+    q := `SELECT * FROM Clip
+          WHERE clip.animeID IN 
+            (SELECT DISTINCT uid FROM Anime
+            WHERE title=$1)`
+    rows, err := db.Query(q, title)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+        var uid int
+		var animeRef int 
+		var typ int
+        var ind int
+        var year int
+        var title string
+        var url string
+        var path string
+        var usable bool
+        var difficulty int
+		err := rows.Scan(&uid, &animeRef, &typ, &ind, &year, &title, &url, &path, &usable, &difficulty)
+		if err != nil {
+			return nil, err
+		}
+        clip := Clip{ 
+                    AnimeRef: animeRef, Type: typ,
+                    Ind: ind, Year: year,
+                    Title: title, Url: url,
+                    Path: path, Usable: usable,
+                    Difficulty: difficulty,
+                }
+	    result = append(result, clip)
+	}
+
+	return result, nil
+}
+
+func GetAllUsableClipsFromAnime(title string) ([]Clip, error) {
+    db := dbInstance.db
+    result := []Clip{}
+    q := `SELECT * FROM Clip
+          WHERE usable=true
+          AND clip.animeID IN 
+            (SELECT DISTINCT uid FROM Anime
+            WHERE title=$1)`
+
+    rows, err := db.Query(q, title)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var animeRef int 
+		var typ int
+        var ind int
+        var year int
+        var title string
+        var url string
+        var path string
+        var usable bool
+        var difficulty int
+		err := rows.Scan(&animeRef, &typ, &ind, &year, &title, &url, &path, &usable, &difficulty)
+		if err != nil {
+			return nil, err
+		}
+        clip := Clip{ 
+                    AnimeRef: animeRef, Type: typ,
+                    Ind: ind, Year: year,
+                    Title: title, Url: url,
+                    Path: path, Usable: usable,
+                    Difficulty: difficulty,
+                }
+	    result = append(result, clip)
+	}
+
+	return result, nil
+}
+
+
 func (s *service) migrateAnime() error {
     q := `CREATE TABLE IF NOT EXISTS Anime (
         uid         SERIAL PRIMARY KEY,

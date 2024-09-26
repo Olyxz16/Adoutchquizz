@@ -15,8 +15,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	e.GET("/", handler.Index)
     e.GET("/get/:group/:value/*", handler.Get)
+
     e.GET("/set/:value", handler.Set)
-    
     e.POST("/set/:value", handler.SetForm);
 
 	return e

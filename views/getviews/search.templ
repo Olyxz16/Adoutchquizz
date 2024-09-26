@@ -1,0 +1,17 @@
+package getviews
+
+import (
+    "Adoutchquizz/views"
+)
+
+templ Search(url string) {
+    @views.Base() {
+        <div id="searchbar">
+            <form hx-get={url} hx-target="#result" hx-swap="innerHTML"> 
+                <input type="text" name="search" />
+            </form>
+        </div>
+        <div id="result"> 
+        </div>
+    }
+}
