@@ -23,9 +23,9 @@ func Get(c echo.Context) error {
 /*            SEARCH             */
 /*********************************/
 
-func getSearchView(c echo.Context) error {
+func getSearchView(c echo.Context, desc string) error {
     req := c.Request().URL.RequestURI()
-    return render(c, getviews.Search(req))
+    return render(c, getviews.Search(req, desc))
 }
 
 
@@ -37,7 +37,6 @@ func getVideo(c echo.Context) error {
     value := c.Param("value")
     switch value {
         case "clip": return getVideoClip(c)
-        case "": return getSearchView(c)
     }
     return render(c, views.Error404())
 }
@@ -46,7 +45,7 @@ func getVideo(c echo.Context) error {
 func getVideoClip(c echo.Context) error {
     url := c.QueryParam("search")
     if url == "" {
-        return getSearchView(c)
+        return getSearchView(c, "Tous les clips d'une vidéo")
     }
     clips, err := database.GetAllClipsFromVideo(url)
     if err != nil {
@@ -73,7 +72,7 @@ func getAnime(c echo.Context) error {
 func getAnimeClip(c echo.Context) error {
     title := c.QueryParam("search")
     if title == "" {
-        return getSearchView(c)
+        return getSearchView(c, "Tous les clips d'un anime")
     }
     clips, err := database.GetAllClipsFromAnime(title)
     if err != nil {
@@ -85,7 +84,7 @@ func getAnimeClip(c echo.Context) error {
 func getAnimeUsableClip(c echo.Context) error {
     title := c.QueryParam("search")
     if title == "" {
-        return getSearchView(c)
+        return getSearchView(c, "Tous les clips utilisables d'un anime")
     }
     clips, err := database.GetAllUsableClipsFromAnime(title)
     if err != nil {

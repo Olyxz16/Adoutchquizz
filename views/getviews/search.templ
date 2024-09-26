@@ -4,11 +4,13 @@ import (
     "Adoutchquizz/views"
 )
 
-templ Search(url string) {
+templ Search(url string, desc string) {
     @views.Base() {
-        <div id="searchbar">
+        @views.MenuArrow()
+        <div id="searchdiv">
+            <h2> {desc} </h2>
             <form hx-get={url} hx-target="#result" hx-swap="innerHTML"> 
-                <input type="text" name="search" />
+                <input type="text" name="search" id="searchbar" />
             </form>
         </div>
         <div id="result"> 
