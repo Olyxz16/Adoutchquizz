@@ -45,6 +45,9 @@ func getVideo(c echo.Context) error {
 
 func getVideoClip(c echo.Context) error {
     url := c.QueryParam("search")
+    if url == "" {
+        return getSearchView(c)
+    }
     clips, err := database.GetAllClipsFromVideo(url)
     if err != nil {
         return render(c, getviews.VideoTableError())
