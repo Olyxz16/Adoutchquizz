@@ -6,9 +6,9 @@ import (
 
 templ Clip() {
     @views.Base() {
-        <div> 
+        <div id="setview"> 
             <h2> Ajoute un nouveau clip </h2>
-            <form class="set" hx-post="/set/clip" hx-target="#result" hx-swap="innerHTML">
+            <form class="form" hx-post="/set/clip" hx-target="#result" hx-swap="innerHTML">
                 <!-- Search bar -->
                 <label> Nom anime </label>
                 <input type="text" name="title" />
@@ -28,7 +28,7 @@ templ Clip() {
                 <input type="checkbox" name="usable" />
                 <label> Difficulté </label>
                 <input type="number" name="difficulty" />
-                <input type="submit" />
+                <input type="submit" id="submit" />
             </form>
             <h2 id="result"> </h2>
         </div>

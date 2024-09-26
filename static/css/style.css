@@ -19,7 +19,22 @@ body {
 
 
 
-.set {
+#setview {
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-top: 8px;
+}
+#submit {
+    margin-top: 24px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    text-align: center;
 }

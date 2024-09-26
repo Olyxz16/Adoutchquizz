@@ -6,9 +6,9 @@ import (
 
 templ Video() {
     @views.Base() {
-        <div> 
+        <div id="setview"> 
             <h2> Ajoute une nouvelle vidéo </h2>
-            <form class="set" hx-post="/set/video" hx-target="#result" hx-swap="innerHTML">
+            <form class="form" hx-post="/set/video" hx-target="#result" hx-swap="innerHTML">
                 <!-- Search bar -->
                 <label> Nom anime </label>
                 <input type="text" name="title" />
@@ -22,7 +22,7 @@ templ Video() {
                 <input type="text" name="indVideo" />
                 <label> Date de sortie </label>
                 <input type="date" name="date"/>
-                <input type="submit" />
+                <input type="submit" id="submit" />
             </form>
             <h2 id="result"> </h2>
         </div>
