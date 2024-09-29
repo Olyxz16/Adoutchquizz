@@ -12,8 +12,7 @@ templ Search(url string, desc string) {
             <form hx-get={url} hx-target="#result" hx-swap="innerHTML"> 
                 <input type="text" name="search" id="searchbar" />
             </form>
-        </div>
-        <div id="result"> 
+            <div id="result"></div>
         </div>
     }
 }

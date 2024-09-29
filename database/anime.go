@@ -79,9 +79,9 @@ func GetAllClipsFromAnime(title string) ([]Clip, error) {
 		if err != nil {
 			return nil, err
 		}
-        clip := Clip{ 
+        clip := Clip{
                     AnimeRef: animeRef, Type: typ,
-                    Ind: ind, Year: year,
+                    Uid: uid, Ind: ind, Year: year,
                     Title: title, Url: url,
                     Path: path, Usable: usable,
                     Difficulty: difficulty,

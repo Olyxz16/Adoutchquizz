@@ -1,50 +1,16 @@
 package getviews
 
 import (
-    "strconv"
-
     "Adoutchquizz/views"
     "Adoutchquizz/database"
 )
-
-func TypeToString(clip database.Clip) string {
-    switch clip.Type {
-        case 1: return "Easy";
-        case 2: return "Medium";
-        case 3: return "Hard";
-        case 4: return "Otaku";
-        default: return ""
-    }
-}
-func UsableToString(clip database.Clip) string {
-    if clip.Usable {
-        return "utilisable"
-    }
-    return "guez"
-}
-
-templ video(clip database.Clip) {
-    <tr>
-        <th> { strconv.Itoa(clip.AnimeRef) } </th>
-        <th> { TypeToString(clip) } </th>
-        <th> { strconv.Itoa(clip.Ind) } </th>
-        <th> { strconv.Itoa(clip.Year) } </th>
-        <th> { clip.Title } </th>
-        <th> { clip.Url } </th>
-        <th> { clip.Path } </th>
-        <th> { UsableToString(clip)  } </th>
-        <th> { strconv.Itoa(clip.Difficulty) } </th>
-    </tr>
-}
 
 templ VideoTable(url string, clips []database.Clip) {
     @views.Base() {
         <div> 
             <h2> Clips from video { url } </h2>
             <table>
-                for _, clip := range clips {
-                    @video(clip) 
-                }
+                @clipTable(clips) 
             </table>
         </div>
     } 

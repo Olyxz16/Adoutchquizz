@@ -58,3 +58,11 @@ label {
     width: 40vw;
     height: 5vh;
 }
+
+table {
+    width: 85vw;
+    border-collapse: collapse;
+}
+th:not(.del){
+    border: 1px solid;
+}
