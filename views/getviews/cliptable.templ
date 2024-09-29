@@ -29,6 +29,11 @@ func difficultyToString(clip database.Clip) string {
     }
 }
 
+templ deleteButton(clip database.Clip) {
+    <form hx-delete={"/clip/" + strconv.Itoa(clip.Uid)}>
+        <button> Del </button>
+    </form>
+}
 
 templ clipTable(clips []database.Clip) {
     <tr>
@@ -51,6 +56,7 @@ templ clipTable(clips []database.Clip) {
             <th> { clip.Path } </th>
             <th> { usableToString(clip)  } </th>
             <th> { difficultyToString(clip) } </th>
+            <th class="del"> @deleteButton(clip) </th>
         </tr>
     }
 }

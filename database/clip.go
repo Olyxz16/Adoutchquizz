@@ -37,6 +37,22 @@ func AddClip(clip Clip) error {
 	return nil
 }
 
+func DeleteClip(id int) error {
+    db := dbInstance.db
+    tx, err := db.Begin()
+    if err != nil {
+        return err
+    }
+    q := `DELETE FROM Clip
+            WHERE uid=$1`
+    _, err = tx.Exec(q, id)
+    if err != nil {
+        return err
+    }
+    tx.Commit()
+    return nil
+}
+
 func ClipIdFromData(title string, typ int, ind int) (int, error) {
     db := dbInstance.db
     q := `SELECT uid FROM clip

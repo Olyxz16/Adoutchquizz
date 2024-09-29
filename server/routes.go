@@ -18,6 +18,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
     e.GET("/set/:value", handler.Set)
     e.POST("/set/:value", handler.SetForm);
+    
+    e.DELETE("/clip/:id", handler.RemoveClip);
 
 	return e
 }
