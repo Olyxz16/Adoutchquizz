@@ -1,0 +1,15 @@
+{
+    "name": "adoutchquizz",
+    "version": "1.0.0",
+    "description": "Project Assemblee",
+    "main": "index.js",
+    "scripts": {
+        "build": "tailwindcss build -i static/css/main.css -o static/css/tailwind.css --minify",
+        "watch": "tailwindcss build -i static/css/main.css -o static/css/tailwind.css --watch"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "tailwindcss": "^3.4.13"
+    }
+}
