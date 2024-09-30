@@ -6,8 +6,8 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"Adoutchquizz/database"
-	"Adoutchquizz/views"
 	"Adoutchquizz/views/getviews"
+	"Adoutchquizz/views/errors"
 )
 
 func Get(c echo.Context) error {
@@ -16,7 +16,7 @@ func Get(c echo.Context) error {
         case "video": return getVideo(c)
         case "anime": return getAnime(c) 
     }
-    return render(c, views.Error404())
+    return render(c, errors.Error404())
 }
 
 /*********************************/
@@ -38,7 +38,7 @@ func getVideo(c echo.Context) error {
     switch value {
         case "clip": return getVideoClip(c)
     }
-    return render(c, views.Error404())
+    return render(c, errors.Error404())
 }
 
 
@@ -65,7 +65,7 @@ func getAnime(c echo.Context) error {
         case "clip": return getAnimeClip(c)
         case "usable": return getAnimeUsableClip(c)
     }
-    return render(c, views.Error404())
+    return render(c, errors.Error404())
 }
 
 

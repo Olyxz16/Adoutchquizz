@@ -9,8 +9,8 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"Adoutchquizz/database"
-	"Adoutchquizz/views"
 	"Adoutchquizz/views/setviews"
+    "Adoutchquizz/views/errors"
 )
 
 func Set(c echo.Context) error {
@@ -20,7 +20,7 @@ func Set(c echo.Context) error {
         case "clip": return render(c, setviews.Clip())
         case "video": return render(c, setviews.Video())
     }
-    return render(c, views.Error404())
+    return render(c, errors.Error404())
 }
 
 func SetForm(c echo.Context) error {
@@ -30,14 +30,13 @@ func SetForm(c echo.Context) error {
         case "clip": return postClip(c)
         case "video": return postVideo(c)
     }
-    return render(c, views.Error404())
+    return render(c, errors.Error404())
 }
 
 func postVideo(c echo.Context) error {
     title := c.FormValue("title")
     typ, err1 := strconv.Atoi(c.FormValue("type"))
     indClip, err2 := strconv.Atoi(c.FormValue("indClip"))
-    url := c.FormValue("url")
     indVideo, err3 := strconv.Atoi(c.FormValue("indVideo"))
     date := c.FormValue("date")
     
@@ -60,11 +59,10 @@ func postVideo(c echo.Context) error {
     if err != nil {
         return render(c, setviews.VideoResult(false))
     }
-
+    
+    fmt.Println(indVideo)
     video := database.Video {
-        Url: url,
         ClipRef: uid,
-        Ind: indVideo,
         ReleaseDate: releaseDate,
     }
     err = database.AddVideo(video) 
