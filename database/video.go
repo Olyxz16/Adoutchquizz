@@ -7,10 +7,11 @@ import (
 )
 
 type Video struct {
-	Url             string
-	ClipRef         int
-	Ind             int
+    Uid             int
     ReleaseDate     time.Time
+	ClipRef         int
+	ClipInd         int
+    Ok              bool
 }
 
 
@@ -21,10 +22,10 @@ func AddVideo(video Video) error {
 		return err
 	}
 	q := `INSERT INTO 
-	Video (url, clipID, ind, releaseDate)
-	VALUES ($1, $2, $3, $4);`
-    time := sql.NullTime { Time: video.ReleaseDate, Valid: true }
-    _, err = tx.Exec(q, video.Url, video.ClipRef, video.Ind, time)
+	Video (uid, releaseDate, clipID, clipInd, ok)
+	VALUES ($1, $2, $3, $4, $5);`
+    date := sql.NullTime { Time: video.ReleaseDate, Valid: true }
+    _, err = tx.Exec(q, video.Uid, date, video.ClipRef, video.ClipInd, video.Ok)
     if err != nil {
         return err
     }
@@ -77,11 +78,11 @@ func GetAllClipsFromVideo(url string) ([]Clip, error) {
 
 func (s *service) migrateVideo() error {
     q := `CREATE TABLE IF NOT EXISTS Video (
-        url         VARCHAR(255),
-        clipID      INT,
-        ind         INT,
+        uid         SERIAL PRIMARY KEY,
         releaseDate DATE,
-        PRIMARY KEY (url, clipID)
+        clipID      INT,
+        clipInd     INT,
+        ok          BOOL
     )`
     _, err := s.db.Exec(q)
     return err
