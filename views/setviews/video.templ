@@ -4,6 +4,11 @@ import (
     "Adoutchquizz/views"
 )
 
+// Trié par titre d'anime
+// Deux vues
+// Vues simple
+// // Type
+
 templ Video() {
     @views.Base() {
         @views.MenuArrow()
@@ -11,10 +16,6 @@ templ Video() {
             <h2> Ajoute une nouvelle vidéo </h2>
             <form class="form" hx-post="/set/video" hx-target="#result" hx-swap="innerHTML">
                 <!-- Search bar -->
-                <label> Nom anime </label>
-                <input type="text" name="title" />
-                <label> Type (Opening, Ending, OST) </label>
-                <input type="text" name="type" />
                 <label> Numero Clip </label>
                 <input type="number" name="indClip" />
                 <label> Url </label>
