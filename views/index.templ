@@ -2,19 +2,15 @@ package views
 
 templ Index() {
     @Base() {
-        <div id="main">
-            <div id="getter">
-                <h2> Getter </h2>
-                <a href="/get/video/clip/"> Tous les clips d'une video </a>
-                <a href="/get/anime/clip/"> Tous les clips d'un anime </a>
-                <a href="/get/anime/usable/"> Tous les clips utilisables d'un anime </a>
-            </div>
-            <div id="setter">
-                <h2> Setter </h2>
-                <a href="/set/anime"> Anime </a>
-                <a href="/set/clip"> Clip </a>
-                <a href="/set/video"> Video </a>
-            </div>
+        <div id="video" class="flex flex-col gap-2 w-fit absolute top-1/3 left-1/4">
+            <h2 class="text-6xl bold-gradient"> Videos </h2>
+            <form action="/video" method="get" class="flex flex-row gap-2">
+                <input type="number" name="uid" class="search-primary flex-grow h-auto" placeholder="ID de la vidéo" />
+                <button type="submit" class="btn-primary"> Edit </button>
+            </form>
+            <form action="/video/new" method="get">
+                <button type="submit" class="btn-primary w-full"> Nouvelle vidéo </button>
+            </form>
         </div>
     } 
 }
