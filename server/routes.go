@@ -14,12 +14,17 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.Static("/static", "static")
 
 	e.GET("/", handler.Index)
-    e.GET("/get/:group/:value/*", handler.Get)
+
+    e.GET("/video", handler.Video)
+    e.GET("/video/set", handler.Video)
+
+
+    /*e.GET("/get/:group/:value/*", handler.Get)
 
     e.GET("/set/:value", handler.Set)
     e.POST("/set/:value", handler.SetForm);
     
-    e.DELETE("/clip/:id", handler.RemoveClip);
+    e.DELETE("/clip/:id", handler.RemoveClip);*/
 
 	return e
 }
