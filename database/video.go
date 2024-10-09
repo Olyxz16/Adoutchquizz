@@ -7,7 +7,7 @@ import (
 )
 
 type Video struct {
-    Uid             int
+    VideoID             int
     ReleaseDate     time.Time
 	ClipRef         int
 	ClipInd         int
@@ -22,10 +22,10 @@ func AddVideo(video Video) error {
 		return err
 	}
 	q := `INSERT INTO 
-	Video (uid, releaseDate, clipID, clipInd, ok)
+	Video (videoID, releaseDate, clipID, clipInd, ok)
 	VALUES ($1, $2, $3, $4, $5);`
     date := sql.NullTime { Time: video.ReleaseDate, Valid: true }
-    _, err = tx.Exec(q, video.Uid, date, video.ClipRef, video.ClipInd, video.Ok)
+    _, err = tx.Exec(q, video.VideoID, date, video.ClipRef, video.ClipInd, video.Ok)
     if err != nil {
         return err
     }
@@ -33,52 +33,96 @@ func AddVideo(video Video) error {
 	return nil
 }
 
-func GetAllClipsFromVideo(url string) ([]Clip, error) {
+func GetAllClipsFromVideo(uid int) ([]Video, []Clip, []Anime, error) {
     db := dbInstance.db
-    result := []Clip{}
-    q := `
-        SELECT * FROM Video
-        WHERE clipId IN 
-            (SELECT clipID FROM Video
-            WHERE url=$1)
-    `
-    rows, err := db.Query(q, url)
+    qvideos := `SELECT * FROM Video
+                FULL JOIN (
+                    SELECT uid as clID, animeID, type, ind FROM Clip
+                ) ON Video.clipID = clID
+                FULL JOIN (
+                    SELECT uid as aniID, title as aniTitle FROM Anime            
+                ) ON animeID = aniID
+                WHERE Video.videoID=$1
+                ORDER BY Video.clipInd ASC`
+    rows, err := db.Query(qvideos, uid)
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
-	defer rows.Close()
+    defer rows.Close()
+    
+    videos := []Video{}
+    clips := []Clip{}
+    animes := []Anime{}
 
 	for rows.Next() {
-        var uid int
+        var vuid int
+        var videoId int
+        var releaseDate time.Time
+        var clipRef int
+        var clipInd int
+        var ok bool
+
+        var clipId int
 		var animeRef int 
 		var typ int
         var ind int
-        var year int
-        var title string
-        var url string
-        var path string
-        var usable bool
-        var difficulty int
-		err := rows.Scan(&uid, &animeRef, &typ, &ind, &year, &title, &url, &path, &usable, &difficulty)
+
+        var aniId int
+        var animeTitle string
+		err := rows.Scan(
+            &vuid, &videoId, &releaseDate, &clipRef, &clipInd, &ok,
+            &clipId, &animeRef, &typ, &ind,
+            &aniId, &animeTitle,
+            )
 		if err != nil {
-			return nil, err
+			return nil, nil, nil, err
 		}
-        clip := Clip{ 
-                    AnimeRef: animeRef, Type: typ,
-                    Ind: ind, Year: year,
-                    Title: title, Url: url,
-                    Path: path, Usable: usable,
-                    Difficulty: difficulty,
-                }
-	    result = append(result, clip)
+        video := Video {
+            VideoID: videoId,
+            ReleaseDate: releaseDate,
+            ClipRef: clipRef,
+            ClipInd: clipInd,
+            Ok: ok,
+        }
+        clip := Clip { 
+            AnimeRef: animeRef,
+            Type: typ,
+            Ind: ind,
+        }
+        anime := Anime {
+            Uid: aniId,
+            Title: animeTitle,
+        }
+	    videos = append(videos, video)
+        clips = append(clips, clip)
+        animes = append(animes, anime)
 	}
 
-	return result, nil
+	return videos, clips, animes, nil
+}
+
+func GetNextVideoID() (int, error) {
+    db := dbInstance.db
+    q := `SELECT MAX(videoID) FROM Video`
+    rows, err := db.Query(q)
+	if err != nil {
+		return 0, err
+	}
+	defer rows.Close()
+    
+    rows.Next()
+    var uid int
+    err = rows.Scan(&uid)
+    if err != nil {
+        return 0, err
+    }
+    return uid+1, nil
 }
 
 func (s *service) migrateVideo() error {
     q := `CREATE TABLE IF NOT EXISTS Video (
         uid         SERIAL PRIMARY KEY,
+        videoID     INT,
         releaseDate DATE,
         clipID      INT,
         clipInd     INT,
