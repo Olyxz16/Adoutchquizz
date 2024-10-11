@@ -21,13 +21,54 @@ func Video(c echo.Context) error {
         default: return render(c, errors.Error404())
     }
 }
+func VideoPost(c echo.Context) error {
+    names, err := c.FormParams()
+    if err != nil {
+        return err
+    }
+    if names.Has("videoID") && names.Has("clipOrder") && names.Has("ok") {
+        return postClipState(c)
+    }
+    return nil
+}
+func postClipState(c echo.Context) error {
+    var ok bool
+    if c.FormValue("ok") == "true" {
+        ok = true
+    } else {
+        ok = false
+    }
+    vid, err := strconv.Atoi(c.FormValue("videoID"))
+    if err != nil {
+        return err
+    }
+    cord, err := strconv.Atoi(c.FormValue("clipOrder"))
+    if err != nil {
+        return err
+    }
+    data := video.ClipData {
+        VideoId: vid,
+        Order: cord,
+        State: ok,
+    } 
+    ok, err = setOk(data)
+    if err != nil {
+        return err
+    }
+    return render(c, video.StateCheckBox(data))
+}
+
+
+/************************************/
+/*               GET                */
+/************************************/
 
 func newVideoPage(c echo.Context) error {
     id, err := database.GetNextVideoID()
     if err != nil {
         return err
     }
-    return render(c, video.Layout(id, []video.ClipData{}, []video.ClipData{}, []video.ClipData{}))
+    return render(c, video.Layout(id, nil, []video.ClipData{}, []video.ClipData{}, []video.ClipData{}))
 }
 
 
@@ -41,8 +82,9 @@ func videoPage(c echo.Context) error {
     if err != nil {
         return err
     }
+    time := videos[0].ReleaseDate
     opening, ending, ost := sortVideos(videos, clips, animes)
-    return render(c, video.Layout(id, opening, ending, ost))
+    return render(c, video.Layout(id, &time, opening, ending, ost))
 }
 
 func sortVideos(videos []database.Video, clips []database.Clip, animes []database.Anime) ([]video.ClipData, []video.ClipData, []video.ClipData) {
@@ -53,7 +95,8 @@ func sortVideos(videos []database.Video, clips []database.Clip, animes []databas
         c := clips[i]
         a := animes[i]
         data := video.ClipData {
-            VideoInd: v.ClipInd,
+            VideoId: videos[0].VideoID,
+            Order: v.ClipInd,
             AnimeTitle: a.Title,
             ClipInd: c.Ind,
             State: v.Ok, 
@@ -65,4 +108,14 @@ func sortVideos(videos []database.Video, clips []database.Clip, animes []databas
         }
     }
     return opening, ending, ost
+}
+
+
+/************************************/
+/*              POST                */
+/************************************/
+
+func setOk(clip video.ClipData) (bool, error) {
+    err := database.SetClipOKInVideo(clip.VideoId, clip.Order, clip.State)
+    return clip.State, err
 }

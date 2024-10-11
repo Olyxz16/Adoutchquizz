@@ -119,6 +119,13 @@ func GetNextVideoID() (int, error) {
     return uid+1, nil
 }
 
+func SetClipOKInVideo(videoID, clipID int, ok bool) (error) {
+    db := dbInstance.db
+    q := `UPDATE Video SET ok=$3 WHERE videoID=$1 AND clipID=$2`
+    _, err := db.Exec(q, videoID, clipID, ok)
+    return err
+}
+
 func (s *service) migrateVideo() error {
     q := `CREATE TABLE IF NOT EXISTS Video (
         uid         SERIAL PRIMARY KEY,

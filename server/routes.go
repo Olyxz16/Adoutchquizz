@@ -13,11 +13,17 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.Use(middleware.Recover())
 	e.Static("/static", "static")
 
+    /***************/
+    /*    INDEX    */
+    /***************/
 	e.GET("/", handler.Index)
-
+    
+    /***************/
+    /*    VIDEO    */
+    /***************/
     e.GET("/video", handler.Video)
-    e.GET("/video/set", handler.Video)
-
+    e.GET("/video/new", handler.Video)
+    e.POST("/video/set", handler.VideoPost) 
 
     /*e.GET("/get/:group/:value/*", handler.Get)
 

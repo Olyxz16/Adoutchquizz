@@ -27,7 +27,7 @@
 @layer base {
     .background {
         background-color: rgb(10, 10, 10);
-        @apply bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-purple-900/40 via-slate-900/40 to-purple-900/40;
+        @apply w-auto h-full bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-purple-900/40 via-slate-900/40 to-purple-900/40;
     }
 }
 
@@ -39,11 +39,4 @@ input::-webkit-inner-spin-button {
 input {
     appearance: textfield;
     -moz-appearance: textfield;
-}
-
-
-body {
-    margin: 0px;
-    width: 100vw;
-    height: 100vh;
 }
