@@ -70,7 +70,7 @@ templ videoDate(date *time.Time) {
 templ Layout(ind int, date *time.Time, col1, col2, col3 []ClipData) {
     @views.Base() {
         <div class="pl-4 w-fit flex flex-row gap-16 items-baseline">
-            <h2 class="text-8xl bold-gradient"> Video </h2> 
+            <a class="text-8xl bold-gradient" href="/"> Video </a> 
             <h2 class="text-3xl bold-gradient"> n°{ strconv.Itoa(ind) } </h2>
             <h2 class="text-3xl bold-gradient"> @videoDate(date) </h2>
         </div>
