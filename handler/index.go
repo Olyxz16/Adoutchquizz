@@ -1,11 +1,19 @@
 package handler
 
 import (
+	"log"
+
 	"github.com/labstack/echo/v4"
 
-    "Adoutchquizz/views"
+	"Adoutchquizz/database"
+	"Adoutchquizz/views"
 )
 
 func Index(c echo.Context) error {
-    return render(c, views.Index())
+    lastVideos, err := database.GetLatestVideos(10)
+    if err != nil {
+        log.Fatal(err)
+        return err
+    }
+    return render(c, views.Index(lastVideos))
 }

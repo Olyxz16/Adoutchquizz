@@ -1,7 +1,37 @@
 package views
 
-templ Index() {
-    @Base() {
+import (
+    "fmt"
+    "strconv"
+
+    "Adoutchquizz/database"
+)
+
+
+func videoLink(video database.Video) string {
+    return fmt.Sprintf("/video?uid=%d", video.VideoID); 
+}
+func videoDate(video database.Video) string {
+    return video.ReleaseDate.Format("01-02-2006")
+}
+
+templ videoAccordionElement(video database.Video) {
+    <div class="flex flex-row gap-2">
+        <h2 class="bold-gradient"> { strconv.Itoa(video.VideoID) } </h2>
+        <a href={ templ.URL(videoLink(video)) }> { videoDate(video) } </a>
+    </div>
+}
+
+templ lastVideosAccordion(videos []database.Video) {
+    <details class="text-white">
+    <summary> Précédentes vidéos </summary>
+    for _, v := range videos {
+        @videoAccordionElement(v) 
+    }
+    </details>
+}
+
+templ videoCard(videos []database.Video) {
         <div id="videos" class="flex flex-col gap-2 w-fit absolute top-1/3 left-1/4">
             <h2 class="text-6xl bold-gradient"> Videos </h2>
             <form action="/video" method="get" class="flex flex-row gap-2">
@@ -11,9 +41,12 @@ templ Index() {
             <form action="/video/new" method="get">
                 <button type="submit" class="btn-primary w-full font-bold"> Nouvelle vidéo </button>
             </form>
+            @lastVideosAccordion(videos)
         </div>
+}
 
-        <div id="clips" class="flex flex-col w-fit absolute top-1/3 right-1/4">
+templ clipCard() {
+    <div id="clips" class="flex flex-col w-fit absolute top-1/3 right-1/4">
             <h2 class="text-6xl bold-gradient"> Clips </h2>
             <form action="/clip" method="get" class="flex flex-row items-center content-center gap-2">
                 <div class="flex flex-col gap-2">
@@ -40,5 +73,12 @@ templ Index() {
                 </div>
             </form>
         </div>
-    } 
+
+}
+
+templ Index(lastVideos []database.Video) {
+    @Base() {
+        @videoCard(lastVideos)
+        @clipCard()
+    }
 }

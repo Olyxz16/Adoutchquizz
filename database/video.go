@@ -2,12 +2,13 @@ package database
 
 import (
 	"database/sql"
+	"log"
 	"strings"
 	"time"
 )
 
 type Video struct {
-    VideoID             int
+    VideoID         int
     ReleaseDate     time.Time
 	ClipRef         int
 	ClipInd         int
@@ -31,6 +32,35 @@ func AddVideo(video Video) error {
     }
 	tx.Commit()
 	return nil
+}
+
+func GetLatestVideos(n int) ([]Video, error) {
+    db := dbInstance.db
+    q := `SELECT DISTINCT videoID, releaseDate FROM Video
+            ORDER BY releaseDate DESC
+            LIMIT $1`
+    rows, err := db.Query(q, n)
+    if err != nil {
+        return nil, err
+    }
+    log.Print("1")
+    defer rows.Close()
+    videos := []Video{}
+    for rows.Next() {
+        var videoID int
+        var releaseDate time.Time
+        err := rows.Scan(&videoID, &releaseDate)
+        if err != nil {
+            return nil, err
+        }
+        vid := Video{
+            VideoID: videoID,
+            ReleaseDate: releaseDate,
+        }
+        videos = append(videos, vid)
+    }
+    log.Print(len(videos))
+    return videos, nil
 }
 
 func GetAllClipsFromVideo(uid int) ([]Video, []Clip, []Anime, error) {
