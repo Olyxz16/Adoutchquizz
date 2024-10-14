@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"log"
 	"strings"
 	"time"
 )
@@ -43,7 +42,6 @@ func GetLatestVideos(n int) ([]Video, error) {
     if err != nil {
         return nil, err
     }
-    log.Print("1")
     defer rows.Close()
     videos := []Video{}
     for rows.Next() {
@@ -59,7 +57,6 @@ func GetLatestVideos(n int) ([]Video, error) {
         }
         videos = append(videos, vid)
     }
-    log.Print(len(videos))
     return videos, nil
 }
 
