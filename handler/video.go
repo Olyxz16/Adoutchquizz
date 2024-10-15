@@ -15,11 +15,11 @@ import (
 *    /video?uid={int}   |   /video/new
  */
 func Video(c echo.Context) error {
-    url := c.Request().URL.Path
+    url := c.Path()
     switch url {
-        case "/video": return videoPage(c)
-        case "/video/new": return newVideoPage(c)
-        default: return render(c, errors.Error404())
+    case "/video/:uid": return videoPage(c)
+    case "/video/new": return newVideoPage(c)
+    default: return render(c, errors.Error404())
     }
 }
 func VideoPost(c echo.Context) error {
@@ -66,7 +66,7 @@ func newVideoPage(c echo.Context) error {
 
 
 func videoPage(c echo.Context) error {
-    id, err := strconv.Atoi(c.QueryParam("uid"))
+    id, err := strconv.Atoi(c.Param("uid"))
     if err != nil {
         log.Warn(err)
         // Si l'id n'est pas bon, on retourne une page vierge

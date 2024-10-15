@@ -9,7 +9,7 @@ import (
 
 
 func videoLink(video database.Video) string {
-    return fmt.Sprintf("/video?uid=%d", video.VideoID); 
+    return fmt.Sprintf("/video/%d", video.VideoID); 
 }
 func videoDate(video database.Video) string {
     return video.ReleaseDate.Format("01-02-2006")
