@@ -7,6 +7,7 @@ import (
 )
 
 type Video struct {
+    Uid             int
     VideoID         int
     ReleaseDate     time.Time
 	ClipRef         int
@@ -105,6 +106,7 @@ func GetAllClipsFromVideo(uid int) ([]Video, []Clip, []Anime, error) {
 			return nil, nil, nil, err
 		}
         video := Video {
+            Uid: vuid,
             VideoID: videoId,
             ReleaseDate: releaseDate,
             ClipRef: clipRef,
@@ -150,6 +152,13 @@ func SetClipOKInVideo(videoID, clipID int, ok bool) (error) {
     db := dbInstance.db
     q := `UPDATE Video SET ok=$3 WHERE videoID=$1 AND clipID=$2`
     _, err := db.Exec(q, videoID, clipID, ok)
+    return err
+}
+
+func RemoveClipFromVideo(uid int) (error) {
+    db := dbInstance.db
+    q := `DELETE FROM Video WHERE uid=$1`
+    _, err := db.Exec(q, uid)
     return err
 }
 

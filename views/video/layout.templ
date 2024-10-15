@@ -9,6 +9,7 @@ import (
 )
 
 type ClipData struct {
+    Uid     int
     VideoId int
     Order   int
     AnimeTitle string
@@ -38,12 +39,22 @@ templ StateCheckBox(clip ClipData) {
         <input type="checkbox" hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
     }
 }
+func removeButtonUrl(clip ClipData) string {
+    return fmt.Sprintf("/video/clip/%d", clip.Uid) 
+}
+func removeButtonTarget(clip ClipData) string {
+    return fmt.Sprintf("#clip%d", clip.Uid)
+}
+templ removeButton(clip ClipData) {
+    <button class="cross-button w-4 h-4 align-middle" hx-delete={ removeButtonUrl(clip) } hx-trigger="click" hx-swap="outerHTML" hx-target={ removeButtonTarget(clip) }> </button>
+}
 templ clip(clip ClipData) {
-    <tr> 
+    <tr id={ "clip" + strconv.Itoa(clip.Uid) }> 
         <th class="w-8 bold-gradient"> { strconv.Itoa(clip.Order) } </th>
         <th class="w-28 text-end"> { clip.AnimeTitle } </th>
         <th class="w-6"> { strconv.Itoa(clip.ClipInd) } </th>
         <th class="w-6"> @StateCheckBox(clip) </th>
+        <th class="absolute"> @removeButton(clip) </th>
     </tr>
 }
 templ column(title string, clips []ClipData) {

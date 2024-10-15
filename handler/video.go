@@ -34,20 +34,11 @@ func VideoPost(c echo.Context) error {
     return nil
 }
 func VideoDelete(c echo.Context) error {
-    names, err := c.FormParams()
-    if err != nil {
-        log.Error(err)
-        return err
+    url := c.Path()
+    switch url {
+    case "/video/clip/:uid": return deleteClip(c)
+    default: return render(c, errors.Error404())
     }
-    if names.Has("uid") {
-        id, err := strconv.Atoi(c.FormValue("uid"))
-        if err != nil {
-            log.Error(err)
-            return err
-        }
-        return database.DeleteClip(id) 
-    }
-    return nil
 }
 
 
@@ -146,4 +137,23 @@ func setOk(clip video.ClipData) (bool, error) {
         return false, err
     }
     return clip.State, nil
+}
+
+
+/************************************/
+/*             DELETE               */
+/************************************/
+
+func deleteClip(c echo.Context) error {
+    uid, err := strconv.Atoi(c.Param("uid")) 
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+    err = database.RemoveClipFromVideo(uid)
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+    return nil
 }

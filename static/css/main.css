@@ -16,6 +16,11 @@
     .radio-label-primary {
         @apply ms-2 text-lg font-normal text-gray-900 dark:text-gray-300;
     }
+    .cross-button {
+        background-color: red;
+        -webkit-mask: url("/static/images/crossicon.svg") no-repeat center / contain;
+        mask: url("/static/images/crossicon.svg") no-repeat center / contain;
+    }
 }
 
 @layer utilities {
