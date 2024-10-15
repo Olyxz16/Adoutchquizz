@@ -16,7 +16,7 @@ type ClipData struct {
     State   bool
 }
 
-func vals(clip ClipData) string {
+func stateCheckBoxVals(clip ClipData) string {
     var okstr string
     // set the value as its opposite
     if clip.State {
@@ -31,13 +31,11 @@ func vals(clip ClipData) string {
         }`, clip.VideoId, clip.Order, okstr)
     return res
 }
-
-// DO HTMX REQUEST
 templ StateCheckBox(clip ClipData) {
     if clip.State {
-        <input type="checkbox" checked hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ vals(clip) } />
+        <input type="checkbox" checked hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
     } else {
-        <input type="checkbox" hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ vals(clip) } />
+        <input type="checkbox" hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
     }
 }
 templ clip(clip ClipData) {
