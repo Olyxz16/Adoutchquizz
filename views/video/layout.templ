@@ -25,6 +25,13 @@ templ videoDate(date *time.Time) {
         <p> Pas encore sortie </p>
     }
 }
+templ Cols(ind int, col1, col2, col3 []ClipData) {
+    <div hx-get={"/video/update/" + strconv.Itoa(ind)} hx-trigger="submit from:#add" hx-swap="outerHTML" class="flex flex-row justify-evenly items-stretch h-full text-white">
+        @column("Opening", col1)
+        @column("Ending", col2)
+        @column("OST", col3)
+    </div>
+}
 templ Layout(ind int, date *time.Time, col1, col2, col3 []ClipData) {
     @views.Base() {
         <div class="pl-4 w-fit flex flex-row gap-16 items-baseline">
@@ -36,10 +43,8 @@ templ Layout(ind int, date *time.Time, col1, col2, col3 []ClipData) {
             <h2 class="bold-gradient text-4xl mb-2"> Ajout Clip </h2>
             @add(ind)
         </div>
-        <div class="relative top-[250px] flex flex-row justify-evenly items-stretch h-full text-white">
-            @column("Opening", col1)
-            @column("Ending", col2)
-            @column("OST", col3)
+        <div class="relative top-[250px]">
+            @Cols(ind, col1, col2, col3)
         </div>
     } 
 }

@@ -20,6 +20,7 @@ func Video(c echo.Context) error {
     switch url {
     case "/video/:uid": return videoPage(c)
     case "/video/new": return newVideoPage(c)
+    case "/video/update/:uid": return videoColumns(c)
     default: return render(c, errors.Error404())
     }
 }
@@ -70,6 +71,20 @@ func videoPage(c echo.Context) error {
     time := videos[0].ReleaseDate
     opening, ending, ost := sortVideos(videos, clips, animes)
     return render(c, video.Layout(id, &time, opening, ending, ost))
+}
+func videoColumns(c echo.Context) error {
+    id, err := strconv.Atoi(c.Param("uid"))
+    if err != nil {
+        log.Warn(err)
+        return err
+    }
+    videos, clips, animes, err := database.GetAllClipsFromVideo(id)
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+    opening, ending, ost := sortVideos(videos, clips, animes)
+    return render(c, video.Cols(id, opening, ending, ost))
 }
 
 func sortVideos(videos []database.Video, clips []database.Clip, animes []database.Anime) ([]video.ClipData, []video.ClipData, []video.ClipData) {
@@ -136,7 +151,6 @@ func addClip(c echo.Context) error {
         log.Error(err)
         return err
     }
-    log.Print(form)
     videoId, err := strconv.Atoi(form.Get("videoId"))
     if err != nil {
         log.Error(err)
