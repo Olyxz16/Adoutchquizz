@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -23,13 +24,11 @@ func Video(c echo.Context) error {
     }
 }
 func VideoPost(c echo.Context) error {
-    names, err := c.FormParams()
-    if err != nil {
-        log.Error(err)
-        return err
-    }
-    if names.Has("videoID") && names.Has("clipOrder") && names.Has("ok") {
-        return postClipState(c)
+    par := c.Param("action")
+    switch par {
+    case "setok": postClipState(c); break;
+    case "addclip": addClip(c); break;
+    default: return render(c, errors.Error404())
     }
     return nil
 }
@@ -123,22 +122,49 @@ func postClipState(c echo.Context) error {
         Order: cord,
         State: ok,
     } 
-    ok, err = setOk(data)
+    err = database.SetClipOKInVideo(vid, cord, ok)
     if err != nil {
         log.Error(err)
         return err
     }
     return render(c, video.StateCheckBox(data))
 }
-func setOk(clip video.ClipData) (bool, error) {
-    err := database.SetClipOKInVideo(clip.VideoId, clip.Order, clip.State)
+
+func addClip(c echo.Context) error {
+    form, err := c.FormParams()
     if err != nil {
         log.Error(err)
-        return false, err
+        return err
     }
-    return clip.State, nil
+    log.Print(form)
+    videoId, err := strconv.Atoi(form.Get("videoId"))
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+    title := form.Get("title")
+    if title == "" {
+        err = fmt.Errorf("Title is empty")
+        log.Error(err)
+        return err
+    }
+    typ, err := strconv.Atoi(form.Get("type"))
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+    ind, err := strconv.Atoi(form.Get("ind"))
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+    err = database.AddClipToVideo(videoId, title, typ, ind)
+    if err != nil {
+        log.Error(err)
+        return err
+    }
+    return nil
 }
-
 
 /************************************/
 /*             DELETE               */

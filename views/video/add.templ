@@ -1,0 +1,21 @@
+package video
+
+import (
+    "strconv"
+)
+
+templ add(ind int) {
+    <form hx-post="/video/addclip" hx-trigger="submit" class="flex flex-col w-fit gap-2">
+        <input hidden name="videoId" value={ strconv.Itoa(ind) }/>
+        <input type="search" name="title" placeholder="Titre de l'anime" class="search-primary w-auto pl-2" />
+        <div class="flex flex-row justify-center gap-2">
+            <select name="type" class="search-primary px-2">
+                <option value="1"> Opening </option>
+                <option value="2"> Ending </option>
+                <option value="3"> OST </option>
+            </select>
+            <input type="number" name="ind" placeholder="Ind" class="search-primary w-10 pl-2" />
+            <button type="submit" class="btn-primary w-9 h-9 p-0"> + </button>
+        </div>
+    </form>
+}

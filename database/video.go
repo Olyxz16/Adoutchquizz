@@ -34,6 +34,37 @@ func AddVideo(video Video) error {
 	return nil
 }
 
+func AddClipToVideo(videoId int, title string, typ, ind int) error {
+    db := dbInstance.db
+    id, err := ClipIdFromData(title, typ, ind)
+    if err != nil {
+        return err
+    }
+    var order int
+    qorder := `SELECT MAX(clipInd) FROM Video WHERE videoID=$1`
+    rows, err := db.Query(qorder, videoId)
+    if err != nil {
+        return err
+    }
+    contains := rows.Next()
+    if !contains {
+        order = 1
+    } else {
+        err = rows.Scan(&order)
+        if err != nil {
+            return err
+        }
+        order += 1
+    }
+    // Null Release date ?
+    video := Video { VideoID: videoId, ClipRef: id, ClipInd: order, Ok: false }
+    err = AddVideo(video)
+    if err != nil {
+        return err
+    }
+    return nil
+}
+
 func GetLatestVideos(n int) ([]Video, error) {
     db := dbInstance.db
     q := `SELECT DISTINCT videoID, releaseDate FROM Video

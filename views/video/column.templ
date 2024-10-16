@@ -1,0 +1,57 @@
+package video
+
+import (
+    "fmt"
+    "strconv"
+)
+
+func stateCheckBoxVals(clip ClipData) string {
+    var okstr string
+    // set the value as its opposite
+    if clip.State {
+        okstr = "false"
+    } else {
+        okstr = "true"
+    }
+    res := fmt.Sprintf(`{
+        "videoID": %d,
+        "clipOrder": %d,
+        "ok": %s
+        }`, clip.VideoId, clip.Order, okstr)
+    return res
+}
+templ StateCheckBox(clip ClipData) {
+    if clip.State {
+        <input type="checkbox" checked hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
+    } else {
+        <input type="checkbox" hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
+    }
+}
+func removeButtonUrl(clip ClipData) string {
+    return fmt.Sprintf("/video/clip/%d", clip.Uid) 
+}
+func removeButtonTarget(clip ClipData) string {
+    return fmt.Sprintf("#clip%d", clip.Uid)
+}
+templ removeButton(clip ClipData) {
+    <button class="cross-button w-4 h-4 align-middle" hx-delete={ removeButtonUrl(clip) } hx-trigger="click" hx-swap="outerHTML" hx-target={ removeButtonTarget(clip) }> </button>
+}
+templ clip(clip ClipData) {
+    <tr id={ "clip" + strconv.Itoa(clip.Uid) }> 
+        <th class="w-8 bold-gradient"> { strconv.Itoa(clip.Order) } </th>
+        <th class="w-28 text-end"> { clip.AnimeTitle } </th>
+        <th class="w-6"> { strconv.Itoa(clip.ClipInd) } </th>
+        <th class="w-6"> @StateCheckBox(clip) </th>
+        <th class="absolute"> @removeButton(clip) </th>
+    </tr>
+}
+templ column(title string, clips []ClipData) {
+    <table class="flex flex-col">
+        <caption class="text-5xl bold-gradient"> { title } </caption>
+        <tbody class="mt-4">
+            for _, c := range clips {
+                @clip(c)
+            }
+        </tbody>
+    </table>
+}
