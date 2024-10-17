@@ -8,7 +8,6 @@ import (
 	"github.com/labstack/gommon/log"
 
 	"Adoutchquizz/database"
-	"Adoutchquizz/views/errors"
 	"Adoutchquizz/views/video"
 )
 
@@ -21,7 +20,7 @@ func Video(c echo.Context) error {
     case "/video/:uid": return videoPage(c)
     case "/video/new": return newVideoPage(c)
     case "/video/update/:uid": return videoColumns(c)
-    default: return render(c, errors.Error404())
+    default: return Error404(c)
     }
 }
 func VideoPost(c echo.Context) error {
@@ -29,7 +28,7 @@ func VideoPost(c echo.Context) error {
     switch par {
     case "setok": postClipState(c); break;
     case "addclip": addClip(c); break;
-    default: return render(c, errors.Error404())
+    default: return Error404(c)
     }
     return nil
 }
@@ -37,7 +36,7 @@ func VideoDelete(c echo.Context) error {
     url := c.Path()
     switch url {
     case "/video/clip/:uid": return deleteClip(c)
-    default: return render(c, errors.Error404())
+    default: return Error404(c)
     }
 }
 
