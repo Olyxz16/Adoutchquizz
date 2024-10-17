@@ -22,9 +22,9 @@ func stateCheckBoxVals(clip ClipData) string {
 }
 templ StateCheckBox(clip ClipData) {
     if clip.State {
-        <input type="checkbox" checked hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
+        <input type="checkbox" checked hx-post="/video/setok" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
     } else {
-        <input type="checkbox" hx-post="/video/set" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
+        <input type="checkbox" hx-post="/video/setok" hx-swap="outerHTML" hx-target="this" hx-vals={ stateCheckBoxVals(clip) } />
     }
 }
 func removeButtonUrl(clip ClipData) string {
