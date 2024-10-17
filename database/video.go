@@ -41,23 +41,29 @@ func AddClipToVideo(videoId int, title string, typ, ind int) error {
         return err
     }
     var order int
-    qorder := `SELECT MAX(clipInd) FROM Video WHERE videoID=$1`
-    rows, err := db.Query(qorder, videoId)
+    var releaseDate time.Time
+    q := `SELECT releaseDate, MAX(clipInd) FROM Video
+            WHERE videoID=$1
+            GROUP BY releaseDate
+            LIMIT 1`
+    rows, err := db.Query(q, videoId)
     if err != nil {
         return err
     }
     contains := rows.Next()
     if !contains {
         order = 1
+        // a changer
+        releaseDate = time.Now()
     } else {
-        err = rows.Scan(&order)
+        err = rows.Scan(&releaseDate, &order)
         if err != nil {
             return err
         }
         order += 1
     }
-    // Null Release date ?
-    video := Video { VideoID: videoId, ClipRef: id, ClipInd: order, Ok: false }
+
+    video := Video { VideoID: videoId, ReleaseDate: releaseDate, ClipRef: id, ClipInd: order, Ok: false }
     err = AddVideo(video)
     if err != nil {
         return err
