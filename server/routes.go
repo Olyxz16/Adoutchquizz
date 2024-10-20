@@ -23,7 +23,6 @@ func (s *Server) RegisterRoutes() http.Handler {
     /***************/
     e.GET("/video/:uid", handler.Video)
     e.GET("/video/new", handler.Video)
-    e.GET("/video/update/:uid", handler.Video)
     e.POST("/video/:action", handler.VideoPost) 
     e.DELETE("/video/clip/:uid", handler.VideoDelete)
     

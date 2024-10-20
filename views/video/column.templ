@@ -14,7 +14,7 @@ func stateCheckBoxVals(clip ClipData) string {
         okstr = "true"
     }
     res := fmt.Sprintf(`{
-        "videoID": %d,
+        "uid": %d,
         "clipOrder": %d,
         "ok": %s
         }`, clip.VideoId, clip.Order, okstr)

@@ -26,7 +26,7 @@ templ videoDate(date *time.Time) {
     }
 }
 templ Cols(ind int, col1, col2, col3 []ClipData) {
-    <div hx-get={"/video/update/" + strconv.Itoa(ind)} hx-trigger="submit from:#add from:.cross-button" hx-swap="outerHTML" class="flex flex-row justify-evenly items-stretch h-full text-white">
+    <div id="cols" class="flex flex-row justify-evenly items-stretch h-full text-white"> 
         @column("Opening", col1)
         @column("Ending", col2)
         @column("OST", col3)

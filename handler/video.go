@@ -19,7 +19,6 @@ func Video(c echo.Context) error {
     switch url {
     case "/video/:uid": return videoPage(c)
     case "/video/new": return newVideoPage(c)
-    case "/video/update/:uid": return videoColumns(c)
     default: return Error404(c)
     }
 }
@@ -71,19 +70,14 @@ func videoPage(c echo.Context) error {
     opening, ending, ost := sortVideos(videos, clips, animes)
     return render(c, video.Layout(id, &time, opening, ending, ost))
 }
-func videoColumns(c echo.Context) error {
-    id, err := strconv.Atoi(c.Param("uid"))
-    if err != nil {
-        log.Warn(err)
-        return err
-    }
-    videos, clips, animes, err := database.GetAllClipsFromVideo(id)
+func videoColumns(c echo.Context, uid int) error {
+    videos, clips, animes, err := database.GetAllClipsFromVideo(uid)
     if err != nil {
         log.Error(err)
         return err
     }
     opening, ending, ost := sortVideos(videos, clips, animes)
-    return render(c, video.Cols(id, opening, ending, ost))
+    return render(c, video.Cols(uid, opening, ending, ost))
 }
 
 func sortVideos(videos []database.Video, clips []database.Clip, animes []database.Anime) ([]video.ClipData, []video.ClipData, []video.ClipData) {
@@ -121,7 +115,7 @@ func postClipState(c echo.Context) error {
     } else {
         ok = false
     }
-    vid, err := strconv.Atoi(c.FormValue("videoID"))
+    vid, err := strconv.Atoi(c.FormValue("uid"))
     if err != nil {
         log.Error(err)
         return err
@@ -144,13 +138,15 @@ func postClipState(c echo.Context) error {
     return render(c, video.StateCheckBox(data))
 }
 
+
+/* Returns the updated columns */
 func addClip(c echo.Context) error {
     form, err := c.FormParams()
     if err != nil {
         log.Error(err)
         return err
     }
-    videoId, err := strconv.Atoi(form.Get("videoId"))
+    videoId, err := strconv.Atoi(form.Get("uid"))
     if err != nil {
         log.Error(err)
         return err
@@ -176,7 +172,7 @@ func addClip(c echo.Context) error {
         log.Error(err)
         return err
     }
-    return nil
+    return videoColumns(c, videoId)
 }
 
 /************************************/

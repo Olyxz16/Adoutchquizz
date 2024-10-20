@@ -5,8 +5,8 @@ import (
 )
 
 templ add(ind int) {
-    <form id="add" hx-post="/video/addclip" hx-trigger="submit" hx-swap="none" class="flex flex-col w-fit gap-2">
-        <input hidden name="videoId" value={ strconv.Itoa(ind) }/>
+    <form hx-post="/video/addclip" hx-trigger="submit" hx-target="#cols" hx-swap="outerHTML" class="flex flex-col w-fit gap-2">
+        <input hidden name="uid" value={ strconv.Itoa(ind) }/>
         <input type="search" name="title" placeholder="Titre de l'anime" class="search-primary w-auto pl-2" />
         <div class="flex flex-row justify-center gap-2">
             <select name="type" class="search-primary px-2">
