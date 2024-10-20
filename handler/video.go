@@ -115,27 +115,17 @@ func postClipState(c echo.Context) error {
     } else {
         ok = false
     }
-    vid, err := strconv.Atoi(c.FormValue("uid"))
+    uid, err := strconv.Atoi(c.FormValue("uid"))
     if err != nil {
         log.Error(err)
         return err
     }
-    cord, err := strconv.Atoi(c.FormValue("clipOrder"))
+    videoId, err := database.SetClipOKInVideo(uid, ok)
     if err != nil {
         log.Error(err)
         return err
     }
-    data := video.ClipData {
-        VideoId: vid,
-        Order: cord,
-        State: ok,
-    } 
-    err = database.SetClipOKInVideo(vid, cord, ok)
-    if err != nil {
-        log.Error(err)
-        return err
-    }
-    return render(c, video.StateCheckBox(data))
+    return videoColumns(c, videoId)
 }
 
 
@@ -146,7 +136,7 @@ func addClip(c echo.Context) error {
         log.Error(err)
         return err
     }
-    videoId, err := strconv.Atoi(form.Get("uid"))
+    videoId, err := strconv.Atoi(form.Get("videoID"))
     if err != nil {
         log.Error(err)
         return err

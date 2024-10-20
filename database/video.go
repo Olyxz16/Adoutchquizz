@@ -185,11 +185,16 @@ func GetNextVideoID() (int, error) {
     return uid+1, nil
 }
 
-func SetClipOKInVideo(videoID, clipID int, ok bool) (error) {
+func SetClipOKInVideo(uid int, ok bool) (int, error) {
     db := dbInstance.db
-    q := `UPDATE Video SET ok=$3 WHERE videoID=$1 AND clipID=$2`
-    _, err := db.Exec(q, videoID, clipID, ok)
-    return err
+    q := `UPDATE Video SET ok=$2 
+            WHERE uid=$1
+            RETURNING videoID`
+    var videoId int
+    rows, err := db.Query(q, uid, ok)
+    rows.Next()
+    rows.Scan(&videoId)
+    return videoId, err
 }
 
 func RemoveClipFromVideo(uid int) (error) {
