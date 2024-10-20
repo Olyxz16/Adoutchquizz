@@ -4,9 +4,9 @@ import (
     "strconv"
 )
 
-templ add(ind int) {
+templ add(videoId int) {
     <form hx-post="/video/addclip" hx-trigger="submit" hx-target="#cols" hx-swap="outerHTML" class="flex flex-col w-fit gap-2">
-        <input hidden name="uid" value={ strconv.Itoa(ind) }/>
+        <input hidden name="videoID" value={ strconv.Itoa(videoId) }/>
         <input type="search" name="title" placeholder="Titre de l'anime" class="search-primary w-auto pl-2" />
         <div class="flex flex-row justify-center gap-2">
             <select name="type" class="search-primary px-2">

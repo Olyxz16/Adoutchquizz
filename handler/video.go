@@ -70,14 +70,14 @@ func videoPage(c echo.Context) error {
     opening, ending, ost := sortVideos(videos, clips, animes)
     return render(c, video.Layout(id, &time, opening, ending, ost))
 }
-func videoColumns(c echo.Context, uid int) error {
-    videos, clips, animes, err := database.GetAllClipsFromVideo(uid)
+func videoColumns(c echo.Context, videoId int) error {
+    videos, clips, animes, err := database.GetAllClipsFromVideo(videoId)
     if err != nil {
         log.Error(err)
         return err
     }
     opening, ending, ost := sortVideos(videos, clips, animes)
-    return render(c, video.Cols(uid, opening, ending, ost))
+    return render(c, video.Cols(videoId, opening, ending, ost))
 }
 
 func sortVideos(videos []database.Video, clips []database.Clip, animes []database.Anime) ([]video.ClipData, []video.ClipData, []video.ClipData) {

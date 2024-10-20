@@ -98,7 +98,7 @@ func GetLatestVideos(n int) ([]Video, error) {
     return videos, nil
 }
 
-func GetAllClipsFromVideo(uid int) ([]Video, []Clip, []Anime, error) {
+func GetAllClipsFromVideo(videoId int) ([]Video, []Clip, []Anime, error) {
     db := dbInstance.db
     qvideos := `SELECT * FROM Video
                 FULL JOIN (
@@ -109,7 +109,7 @@ func GetAllClipsFromVideo(uid int) ([]Video, []Clip, []Anime, error) {
                 ) ON animeID = aniID
                 WHERE Video.videoID=$1
                 ORDER BY Video.clipInd ASC`
-    rows, err := db.Query(qvideos, uid)
+    rows, err := db.Query(qvideos, videoId)
 	if err != nil {
 		return nil, nil, nil, err
 	}
