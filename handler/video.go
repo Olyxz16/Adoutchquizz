@@ -132,38 +132,38 @@ func postClipState(c echo.Context) error {
 
 /* Returns the updated columns */
 func addClip(c echo.Context) error {
-    var errfun func(err error) error
-    errfun = func(err error) error {
+    var errfun func(err error, displayText string) error
+    errfun = func(err error, displayText string) error {
         log.Error(err)
         c.Response().Header().Set("HX-Retarget", "#adderror")
         c.Response().Header().Set("HX-Reswap", "innerHTML")
-        c.String(http.StatusOK, "Erreur")
+        c.String(http.StatusOK, displayText)
         return err
     }
     form, err := c.FormParams()
     if err != nil {
-        return errfun(err)
+        return errfun(err, "Error reading form")
     }
     videoId, err := strconv.Atoi(form.Get("videoID"))
     if err != nil {
-        return errfun(err)
+        return errfun(err, "Id manquant")
     }
     title := form.Get("title")
     if title == "" {
         err = fmt.Errorf("Title is empty")
-        return errfun(err)
+        return errfun(err, "Titre manquant")
     }
     typ, err := strconv.Atoi(form.Get("type"))
     if err != nil {
-        return errfun(err)
+        return errfun(err, "Type manquant")
     }
     ind, err := strconv.Atoi(form.Get("ind"))
     if err != nil {
-        return errfun(err)
+        return errfun(err, "Indice manquant")
     }
     err = database.AddClipToVideo(videoId, title, typ, ind)
     if err != nil {
-        return errfun(err)
+        return errfun(err, "Clip inexistant")
     }
     return videoColumns(c, videoId)
 }
