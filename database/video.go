@@ -211,7 +211,8 @@ func (s *service) migrateVideo() error {
         releaseDate DATE,
         clipID      INT,
         clipInd     INT,
-        ok          BOOL
+        ok          BOOL,
+        UNIQUE (clipID)
     )`
     _, err := s.db.Exec(q)
     return err

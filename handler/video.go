@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
@@ -131,36 +132,38 @@ func postClipState(c echo.Context) error {
 
 /* Returns the updated columns */
 func addClip(c echo.Context) error {
+    var errfun func(err error) error
+    errfun = func(err error) error {
+        log.Error(err)
+        c.Response().Header().Set("HX-Retarget", "#adderror")
+        c.Response().Header().Set("HX-Reswap", "innerHTML")
+        c.String(http.StatusOK, "Erreur")
+        return err
+    }
     form, err := c.FormParams()
     if err != nil {
-        log.Error(err)
-        return err
+        return errfun(err)
     }
     videoId, err := strconv.Atoi(form.Get("videoID"))
     if err != nil {
-        log.Error(err)
-        return err
+        return errfun(err)
     }
     title := form.Get("title")
     if title == "" {
         err = fmt.Errorf("Title is empty")
-        log.Error(err)
-        return err
+        return errfun(err)
     }
     typ, err := strconv.Atoi(form.Get("type"))
     if err != nil {
-        log.Error(err)
-        return err
+        return errfun(err)
     }
     ind, err := strconv.Atoi(form.Get("ind"))
     if err != nil {
-        log.Error(err)
-        return err
+        return errfun(err)
     }
     err = database.AddClipToVideo(videoId, title, typ, ind)
     if err != nil {
-        log.Error(err)
-        return err
+        return errfun(err)
     }
     return videoColumns(c, videoId)
 }
