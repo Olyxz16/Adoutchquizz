@@ -12,7 +12,7 @@ type Anime struct {
     Description     string
 }
 
-func AddAnime(anime Anime) error {
+func AddAnime(title, description, typ string, year int) error {
     db := dbInstance.db
     tx, err := db.Begin()
 	if err != nil {
@@ -21,7 +21,7 @@ func AddAnime(anime Anime) error {
 	q := `INSERT INTO 
 	Anime (title, year, type, description)
 	VALUES ($1, $2, $3, $4);`
-    _, err = tx.Exec(q, anime.Title, anime.Year, anime.Type, anime.Description)
+    _, err = tx.Exec(q, title, year, typ, description)
     if err != nil {
         return err
     }

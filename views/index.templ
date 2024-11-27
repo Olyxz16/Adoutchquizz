@@ -75,6 +75,22 @@ templ clipCard() {
         </div>
 }
 
+templ animeAddCard() {
+    <form hx-post="/anime/add" hx-trigger="submit" hx-target="#animeadderror" hx-swap="innerHTML" class="flex flex-col w-fit gap-2">
+        <p class="text-5xl bold-gradient"> Anime </p>
+        <input type="search" name="title" placeholder="Titre de l'anime" class="search-primary w-auto pl-2" />
+        <div class="flex flex-row justify-center gap-2">
+            <select name="type" class="search-primary px-2">
+                <option value="1"> Opening </option>
+                <option value="2"> Ending </option>
+                <option value="3"> OST </option>
+            </select>
+            <input type="number" name="year" placeholder="Annee" class="search-primary w-24 pl-2" />
+        </div>
+        <input type="text" name="description" placeholder="Description" class="search-primary pl-2" />
+        <button type="submit" class="btn-primary w-auto h-9 p-0"> Ajouter </button>
+        <p id="animeadderror" class="text-lg bold-gradient"> </p>
+    </form>
 }
 
 templ Index(lastVideos []database.Video) {

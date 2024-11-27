@@ -27,6 +27,11 @@ func (s *Server) RegisterRoutes() http.Handler {
     e.DELETE("/video/clip/:uid", handler.VideoDelete)
     
     /***************/
+    /*    ANIME    */
+    /***************/
+    e.GET("/anime/:action", handler.Anime)
+
+    /***************/
     /*    ERROR    */
     /***************/
     e.GET("*", handler.Error404)

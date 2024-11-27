@@ -2,11 +2,11 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 
 	"Adoutchquizz/database"
 	"Adoutchquizz/views/video"
@@ -48,7 +48,7 @@ func VideoDelete(c echo.Context) error {
 func newVideoPage(c echo.Context) error {
     id, err := database.GetNextVideoID()
     if err != nil {
-        log.Error(err)
+        log.Print(err)
         return err
     }
     return render(c, video.Layout(id, nil, []video.ClipData{}, []video.ClipData{}, []video.ClipData{}))
@@ -58,13 +58,13 @@ func newVideoPage(c echo.Context) error {
 func videoPage(c echo.Context) error {
     id, err := strconv.Atoi(c.Param("uid"))
     if err != nil {
-        log.Warn(err)
+        log.Print(err)
         // Si l'id n'est pas bon, on retourne une page vierge
         return newVideoPage(c)
     }
     videos, clips, animes, err := database.GetAllClipsFromVideo(id)
     if err != nil {
-        log.Error(err)
+        log.Print(err)
         return err
     }
     time := videos[0].ReleaseDate
@@ -74,7 +74,7 @@ func videoPage(c echo.Context) error {
 func videoColumns(c echo.Context, videoId int) error {
     videos, clips, animes, err := database.GetAllClipsFromVideo(videoId)
     if err != nil {
-        log.Error(err)
+        log.Print(err)
         return err
     }
     opening, ending, ost := sortVideos(videos, clips, animes)
@@ -118,12 +118,12 @@ func postClipState(c echo.Context) error {
     }
     uid, err := strconv.Atoi(c.FormValue("uid"))
     if err != nil {
-        log.Error(err)
+        log.Print(err)
         return err
     }
     videoId, err := database.SetClipOKInVideo(uid, ok)
     if err != nil {
-        log.Error(err)
+        log.Print(err)
         return err
     }
     return videoColumns(c, videoId)
@@ -134,7 +134,7 @@ func postClipState(c echo.Context) error {
 func addClip(c echo.Context) error {
     var errfun func(err error, displayText string) error
     errfun = func(err error, displayText string) error {
-        log.Error(err)
+        log.Print(err)
         c.Response().Header().Set("HX-Retarget", "#adderror")
         c.Response().Header().Set("HX-Reswap", "innerHTML")
         c.String(http.StatusOK, displayText)
@@ -175,12 +175,12 @@ func addClip(c echo.Context) error {
 func deleteClip(c echo.Context) error {
     uid, err := strconv.Atoi(c.Param("uid")) 
     if err != nil {
-        log.Error(err)
+        log.Print(err)
         return err
     }
     err = database.RemoveClipFromVideo(uid)
     if err != nil {
-        log.Error(err)
+        log.Print(err)
         return err
     }
     return nil
